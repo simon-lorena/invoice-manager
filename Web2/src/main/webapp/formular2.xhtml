@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://java.sun.com/jsf/core"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+<body>
+	<div
+		style="width: 100%; font-size: 36px; line-height: 48px; background-color: navy; color: white">Formular
+		adaugare/stergere/modificare facturi</div>
+	<h:form id="form">
+		<h:panelGrid columns="2" border="1" id="panouFormMaster">
+			<f:facet name="header">
+				<h:outputText value="Formular Facturi"></h:outputText>
+			</f:facet>
+			<h:outputText value="Navigare"></h:outputText>
+
+			<h:panelGrid columns="2" border="1">
+				<h:commandButton id="btnPrevious"
+					actionListener="#{formFactura.prevFactura}" value="Inapoi">
+					<f:ajax render="@form" />
+				</h:commandButton>
+				<h:commandButton id="cmdNext"
+					actionListener="#{formFactura.nextFactura}" value="Inainte">
+					<f:ajax render="@form" />
+				</h:commandButton>
+			</h:panelGrid>
+			
+			<h:outputText value="Adresa"></h:outputText>
+			<h:outputText id="adresa" value="#{formFactura.getAdresa()}">
+			</h:outputText>
+			
+			<h:outputText value="Nume proprietar"></h:outputText>
+				<h:selectOneMenu id="cboApartament" value="#{formFactura.codApartament}">
+				<f:selectItems value="#{formFactura.apartamente}" var="item" itemValue="#{item.id}" itemLabel="#{item.proprietar.nume}" />
+			</h:selectOneMenu>	
+			<h:outputText value="Nr. factura"></h:outputText>
+			<h:inputText value="#{formFactura.factura.nrFactura}"></h:inputText>
+			<h:outputText value="Furnizor"></h:outputText>
+			<h:selectOneMenu id="cboFurnizori" value="#{formFactura.codFurnizor}">
+				<f:selectItems value="#{formFactura.furnizori}" var="item" itemValue="#{item.cif}" itemLabel="#{item.nume}" />
+			</h:selectOneMenu>
+			<h:outputText value="Data Emiterii"></h:outputText>
+			<h:inputText value="#{formFactura.factura.dataEmiterii}">
+				<f:convertDateTime type="date" pattern="yyyy-MM-dd" />
+			</h:inputText>
+			<h:outputText value="Data Scadenta"></h:outputText>
+			<h:inputText value="#{formFactura.factura.dataScadenta}">
+				<f:convertDateTime type="date" pattern="yyyy-MM-dd" />
+			</h:inputText>
+			<h:outputText value="Nr zile pana la scadenta"></h:outputText>
+			<h:outputText value="#{formFactura.factura.getZilePanaLaScadenta()}"></h:outputText>
+			<h:outputText value="Stare factura"></h:outputText>
+				<h:selectOneMenu id="cboStare" value="#{formFactura.stareFactura}">
+				<f:selectItems value="#{formFactura.stari}" var="item" />
+			</h:selectOneMenu>	<h:outputText value="Total plata"></h:outputText>
+			<h:outputText value="#{formFactura.factura.totalPlata}">
+				<f:convertNumber pattern="#0.00" />
+			</h:outputText>
+
+
+
+
+			<h:panelGrid border="1" columns="2" id="p3">
+				<h:commandButton id="cmdAdaugare" value="Adauga"
+					actionListener="#{formFactura.adaugareFactura}" />
+				<h:commandButton id="cmdStergere" value="Sterge"
+					actionListener="#{formFactura.stergereFactura}" />
+			</h:panelGrid>
+			<h:panelGrid border="1" columns="2" id="p4">
+				<h:commandButton id="cmdAbandon" value="Abandon"
+					actionListener="#{formFactura.abandonFactura}" />
+				<h:commandButton id="cmdSalvare" value="Salveaza"
+					actionListener="#{formFactura.salvareFactura}" />
+			</h:panelGrid>
+		</h:panelGrid>
+		<h:dataTable id="articoleGrid" border="1"
+			value="#{formFactura.articoleFacturaDataModel}" var="articolFactura">
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Id" />
+				</f:facet>
+				<h:outputText id="id" value="#{articolFactura.cod}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Serviciu" />
+				</f:facet>
+				<h:selectOneMenu id="cboProdus" value="#{formFactura.codProdus}">
+					<f:selectItems value="#{formFactura.produse}" var="item"
+						itemValue="#{item.cod}" itemLabel="#{item.denumire}" />
+				</h:selectOneMenu>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Cantitate" />
+				</f:facet>
+				<h:inputText id="cantitate" value="#{articolFactura.cantitate}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Valoare TVA" />
+				</f:facet>
+				<h:outputText id="valoareTVA" value="#{articolFactura.valoareTVA}">
+					<f:convertNumber pattern="#0.00" />
+				</h:outputText>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Valoare Articol cu TVA" />
+				</f:facet>
+				<h:outputText id="valoareCuTVA"
+					value="#{articolFactura.valoareCuTVA}">
+					<f:convertNumber pattern="#0.00" />
+				</h:outputText>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="Sterge" />
+				</f:facet>
+				<h:commandButton id="cmdStergeArticol" value="Sterge"
+					actionListener="#{formFactura.stergeArticol}">
+					<f:ajax render="articoleGrid" />
+				</h:commandButton>
+			</h:column>
+
+		</h:dataTable>
+		<h:commandButton id="cmdAdaugaArticol" value="Adauga articol"
+			actionListener="#{formFactura.adaugaArticol}" />
+
+	</h:form>
+
+</body>
+</html>
